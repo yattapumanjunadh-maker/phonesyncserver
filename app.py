@@ -127,5 +127,26 @@ def view_file(filename):
         UPLOAD_FOLDER,
         filename
     )
+@app.route("/send_command", methods=["POST"])
+def send_command():
+
+    data = request.json
+    command = data.get("command")
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO commands (command) VALUES (?)",
+        (command,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "status": "success",
+        "command": command
+    })
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
