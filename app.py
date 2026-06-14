@@ -101,14 +101,19 @@ def upload_file():
     "message": "File uploaded successfully",
     "filename": filename
     })
-@app.route('/files', methods=['GET'])
+@app.route('/files')
 def list_files():
-    files = os.listdir(UPLOAD_FOLDER)
+    result = []
 
-    return jsonify({
-        "status": "success",
-        "files": files
-    })
+    for f in os.listdir(UPLOAD_FOLDER):
+        path = os.path.join(UPLOAD_FOLDER, f)
+
+        result.append({
+            "name": f,
+            "modified": os.path.getmtime(path)
+        })
+
+    return jsonify(result)
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
     return send_from_directory(
