@@ -148,5 +148,29 @@ def send_command():
         "status": "success",
         "command": command
     })
+@app.route("/get_command", methods=["GET"])
+def get_command():
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id, command FROM commands ORDER BY id DESC LIMIT 1"
+    )
+
+    result = cursor.fetchone()
+    conn.close()
+
+    if result:
+        return jsonify({
+            "status": "success",
+            "id": result[0],
+            "command": result[1]
+        })
+
+    return jsonify({
+        "status": "empty",
+        "command": ""
+    })
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
