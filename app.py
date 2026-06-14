@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 import sqlite3
-from flask import Flask, request, jsonify
 import os
 from flask import send_from_directory
-UPLOAD_FOLDER = r"D:\PhoneSyncServer\uploads"
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Flask(__name__)
 
 @app.route("/")
@@ -90,15 +91,10 @@ def upload_file():
     import os
     import time
 
-    UPLOAD_FOLDER = r"D:\PhoneSyncServer\uploads"
-
     filename = f"photo_{int(time.time() * 1000)}.jpg"
-
     save_path = os.path.join(UPLOAD_FOLDER, filename)
-
     file.save(save_path)
 
-   
 
     return jsonify({
     "status": "success",
