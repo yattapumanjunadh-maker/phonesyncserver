@@ -6,7 +6,21 @@ from flask import send_from_directory
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Flask(__name__)
+def init_db():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS commands (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        command TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
 @app.route("/")
 def home():
     return "PhoneSync Server Running Successfully!"
