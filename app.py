@@ -105,7 +105,7 @@ def upload_file():
     import os
     import time
 
-    filename = f"photo_{int(time.time() * 1000)}.jpg"
+    filename = file.filename
     save_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(save_path)
 
