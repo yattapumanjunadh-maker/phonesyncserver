@@ -195,14 +195,24 @@ def get_command():
     )
 
     result = cursor.fetchone()
-    conn.close()
 
     if result:
+
+        cursor.execute(
+            "DELETE FROM commands WHERE id=?",
+            (result[0],)
+        )
+
+        conn.commit()
+        conn.close()
+
         return jsonify({
             "status": "success",
             "id": result[0],
             "command": result[1]
         })
+
+    conn.close()
 
     return jsonify({
         "status": "empty",
