@@ -117,17 +117,39 @@ def upload_file():
     })
 @app.route('/files')
 def list_files():
-    result = []
+
+    photos = []
+    audios = []
 
     for f in os.listdir(UPLOAD_FOLDER):
+
         path = os.path.join(UPLOAD_FOLDER, f)
 
-        result.append({
+        item = {
             "name": f,
             "modified": os.path.getmtime(path)
-        })
+        }
 
-    return jsonify(result)
+        if f.endswith(".jpg"):
+            photos.append(item)
+
+        elif f.endswith(".m4a"):
+            audios.append(item)
+
+    photos.sort(
+        key=lambda x: x["modified"],
+        reverse=True
+    )
+
+    audios.sort(
+        key=lambda x: x["modified"],
+        reverse=True
+    )
+
+    return jsonify({
+        "audio_recordings": audios,
+        "photos": photos
+    })
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
     return send_from_directory(
