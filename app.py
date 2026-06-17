@@ -193,6 +193,26 @@ def view_file(filename):
         UPLOAD_FOLDER,
         filename
     )
+mobile_files = []
+
+@app.route("/filelist", methods=["POST"])
+def filelist():
+
+    global mobile_files
+
+    data = request.form.get("filelist")
+
+    if data:
+        import json
+        mobile_files = json.loads(data)
+
+    return jsonify({
+        "status": "success"
+    })
+
+@app.route("/mobile_files")
+def mobile_files_list():
+    return jsonify(mobile_files)
 
 @app.route("/send_command", methods=["POST"])
 def send_command():
