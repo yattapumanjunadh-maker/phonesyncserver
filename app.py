@@ -152,41 +152,6 @@ def list_files():
     })
 file_list_data = []
 
-@app.route("/filelist", methods=["POST"])
-def receive_file_list():
-
-    global file_list_data
-
-    data = request.form.get("filelist")
-
-    if data:
-
-        import json
-
-        file_list_data = json.loads(data)
-
-        return jsonify({
-            "status": "success",
-            "count": len(file_list_data)
-        })
-
-    return jsonify({
-        "status": "error",
-        "message": "No file list received"
-    })
-
-@app.route('/download/<filename>', methods=['GET'])
-def download_file(filename):
-    return send_from_directory(
-        UPLOAD_FOLDER,
-        filename,
-        as_attachment=True
-    )
-@app.route("/mobile_files")
-def mobile_files():
-
-    return jsonify(file_list_data)
-
 @app.route('/view/<filename>')
 def view_file(filename):
     return send_from_directory(
