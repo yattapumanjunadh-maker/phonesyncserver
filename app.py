@@ -123,27 +123,63 @@ html = """
 </tr>
 """
 
-for f in photos + audios:
+@app.route('/files')
+def list_files():
 
-    html += f"""
+    photos = []
+    audios = []
+
+    for f in os.listdir(UPLOAD_FOLDER):
+
+        path = os.path.join(UPLOAD_FOLDER, f)
+
+        item = {
+            "name": f,
+            "modified": os.path.getmtime(path)
+        }
+
+        if f.endswith(".jpg") or f.endswith(".png"):
+            photos.append(item)
+
+        elif f.endswith(".m4a") or f.endswith(".mp3"):
+            audios.append(item)
+
+    html = """
+    <html>
+    <body>
+
+    <h2>Uploaded Files</h2>
+
+    <table border="1" cellpadding="10">
+
     <tr>
-
-        <td>{f['name']}</td>
-
-        <td>
-            <a href="/view/{f['name']}" target="_blank">
-                Open
-            </a>
-        </td>
-
-        <td>
-            <a href="/download/{f['name']}">
-                Download
-            </a>
-        </td>
-
+        <th>File Name</th>
+        <th>Open</th>
+        <th>Download</th>
     </tr>
     """
+
+    for f in photos + audios:
+
+        html += f"""
+        <tr>
+
+            <td>{f['name']}</td>
+
+            <td>
+                <a href="/view/{f['name']}" target="_blank">
+                    Open
+                </a>
+            </td>
+
+            <td>
+                <a href="/download/{f['name']}">
+                    Download
+                </a>
+            </td>
+
+        </tr>
+        """
 
     html += """
     </table>
@@ -151,6 +187,7 @@ for f in photos + audios:
     </body>
     </html>
     """
+
     return html
 
 file_list_data = []
