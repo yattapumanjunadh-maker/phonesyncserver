@@ -128,6 +128,7 @@ def list_files():
 
     photos = []
     audios = []
+    videos = []
 
     for f in os.listdir(UPLOAD_FOLDER):
 
@@ -144,6 +145,9 @@ def list_files():
         elif f.endswith(".m4a") or f.endswith(".mp3"):
             audios.append(item)
 
+        elif f.endswith(".mp4"):
+            videos.append(item)
+
     html = """
     <html>
     <body>
@@ -159,11 +163,10 @@ def list_files():
     </tr>
     """
 
-    for f in photos + audios:
+    for f in photos + audios + videos:
 
         html += f"""
         <tr>
-
             <td>{f['name']}</td>
 
             <td>
@@ -177,18 +180,19 @@ def list_files():
                     Download
                 </a>
             </td>
-
         </tr>
         """
 
     html += """
     </table>
-
     </body>
     </html>
     """
 
     return html
+@app.route("/debug_files")
+def debug_files():
+    return "<br>".join(os.listdir(UPLOAD_FOLDER))
 
 file_list_data = []
 @app.route('/download/<filename>')
@@ -484,7 +488,11 @@ def photos():
 
     for f in os.listdir(UPLOAD_FOLDER):
 
-        if f.endswith(".jpg") or f.endswith(".png"):
+        if (
+        f.endswith(".jpg")
+        or f.endswith(".png")
+        or f.endswith(".mp4")
+):
 
             html += f"""
             <img src="/view/{f}" width="300">
