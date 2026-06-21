@@ -315,6 +315,80 @@ def request_mobile_file():
         Back
     </a>
     """
+@app.route("/control")
+def control():
+
+    return """
+    <html>
+    <body>
+
+    <h2>PhoneSync Control Panel</h2>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="photo_request">
+            Capture Photo
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="start_audio">
+            Start Audio
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="stop_audio">
+            Stop Audio
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="get_files">
+            Get Files
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_chrome">
+            Open Chrome
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_youtube">
+            Open YouTube
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_instagram">
+            Open Instagram
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="open_whatsapp">
+            Open WhatsApp
+        </button>
+    </form>
+
+    </body>
+    </html>
+    """
 @app.route("/send_command_ui", methods=["POST"])
 def send_command_ui():
 
