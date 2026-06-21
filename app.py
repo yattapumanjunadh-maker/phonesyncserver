@@ -179,6 +179,41 @@ def filelist():
 def mobile_files_list():
     return jsonify(mobile_files)
 
+@app.route("/mobile_files_view")
+def mobile_files_view():
+
+    html = """
+    <html>
+    <head>
+        <title>Mobile Files</title>
+    </head>
+    <body>
+        <h2>Files on Phone</h2>
+        <table border="1" cellpadding="10">
+            <tr>
+                <th>Name</th>
+                <th>Size (Bytes)</th>
+                <th>Path</th>
+            </tr>
+    """
+
+    for f in mobile_files:
+        html += f"""
+        <tr>
+            <td>{f['name']}</td>
+            <td>{f['size']}</td>
+            <td>{f['path']}</td>
+        </tr>
+        """
+
+    html += """
+        </table>
+    </body>
+    </html>
+    """
+
+    return html
+
 @app.route("/send_command", methods=["POST"])
 def send_command():
 
