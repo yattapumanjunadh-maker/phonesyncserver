@@ -333,6 +333,14 @@ def control():
     <br>
 
     <form action="/send_command_ui" method="post">
+        <button name="command" value="video_request">
+            Record Video
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
         <button name="command" value="start_audio">
             Start Audio
         </button>
@@ -431,6 +439,70 @@ def send_command():
         "status": "success",
         "command": command
     })
+@app.route("/recordings")
+def recordings():
+
+    html = """
+    <html>
+    <body>
+
+    <h2>Audio Recordings</h2>
+    """
+
+    for f in os.listdir(UPLOAD_FOLDER):
+
+        if f.endswith(".m4a") or f.endswith(".mp3"):
+
+            html += f"""
+            <p>{f}</p>
+
+            <audio controls>
+                <source src="/view/{f}">
+            </audio>
+
+            <hr>
+            """
+
+    html += """
+    </body>
+    </html>
+    """
+
+    return html
+@app.route("/photos")
+def photos():
+
+    html = "<h2>Photos</h2>"
+
+    for f in os.listdir(UPLOAD_FOLDER):
+
+        if f.endswith(".jpg") or f.endswith(".png"):
+
+            html += f"""
+            <img src="/view/{f}" width="300">
+            <br><br>
+            """
+
+    return html
+@app.route("/videos")
+def videos():
+
+    html = "<h2>Videos</h2>"
+
+    for f in os.listdir(UPLOAD_FOLDER):
+
+        if f.endswith(".mp4"):
+
+            html += f"""
+            <video width="400" controls>
+                <source src="/view/{f}">
+            </video>
+
+            <br><br>
+            """
+
+    return html
+
 @app.route("/get_command", methods=["GET"])
 def get_command():
 
