@@ -333,8 +333,16 @@ def control():
     <br>
 
     <form action="/send_command_ui" method="post">
-        <button name="command" value="video_request">
-            Record Video
+        <button name="command" value="start_video">
+            Start Video
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/send_command_ui" method="post">
+        <button name="command" value="stop_video">
+            Stop Video
         </button>
     </form>
 
