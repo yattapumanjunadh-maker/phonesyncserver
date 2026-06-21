@@ -97,62 +97,71 @@ def upload_file():
 
     file = request.files["file"]
 
-    if file.filename == "":
-        return jsonify({
-            "status": "error",
-            "message": "Empty filename"
-        })
-
-    import os
-    import time
-
     filename = file.filename
     save_path = os.path.join(UPLOAD_FOLDER, filename)
+
     file.save(save_path)
 
-
     return jsonify({
-    "status": "success",
-    "message": "File uploaded successfully",
-    "filename": filename
+        "status": "success",
+        "filename": filename
     })
-@app.route('/files')
-def list_files():
 
-    photos = []
-    audios = []
 
-    for f in os.listdir(UPLOAD_FOLDER):
+html = """
+<html>
+<body>
 
-        path = os.path.join(UPLOAD_FOLDER, f)
+<h2>Uploaded Files</h2>
 
-        item = {
-            "name": f,
-            "modified": os.path.getmtime(path)
-        }
+<table border="1" cellpadding="10">
 
-        if f.endswith(".jpg"):
-            photos.append(item)
+<tr>
+<th>File Name</th>
+<th>Open</th>
+<th>Download</th>
+</tr>
+"""
 
-        elif f.endswith(".m4a"):
-            audios.append(item)
+for f in photos + audios:
 
-    photos.sort(
-        key=lambda x: x["modified"],
-        reverse=True
-    )
+    html += f"""
+    <tr>
 
-    audios.sort(
-        key=lambda x: x["modified"],
-        reverse=True
-    )
+        <td>{f['name']}</td>
 
-    return jsonify({
-        "audio_recordings": audios,
-        "photos": photos
-    })
+        <td>
+            <a href="/view/{f['name']}" target="_blank">
+                Open
+            </a>
+        </td>
+
+        <td>
+            <a href="/download/{f['name']}">
+                Download
+            </a>
+        </td>
+
+    </tr>
+    """
+
+    html += """
+    </table>
+
+    </body>
+    </html>
+    """
+    return html
+
 file_list_data = []
+@app.route('/download/<filename>')
+def download_file(filename):
 
+    return send_from_directory(
+        UPLOAD_FOLDER,
+        filename,
+        as_attachment=True
+    )
 @app.route('/view/<filename>')
 def view_file(filename):
     return send_from_directory(
@@ -225,81 +234,7 @@ def mobile_files_view():
     </html>
     """
     return html
-
-@app.route("/control")
-def control():
-
-    return """
-    <html>
-    <body>
-
-    <h2>PhoneSync Control Panel</h2>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="photo_request">
-            Capture Photo
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="start_audio">
-            Start Audio
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="stop_audio">
-            Stop Audio
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="get_files">
-            Get Files
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="open_chrome">
-            Open Chrome
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="open_youtube">
-            Open YouTube
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="open_instagram">
-            Open Instagram
-        </button>
-    </form>
-
-    <br>
-
-    <form action="/send_command_ui" method="post">
-        <button name="command" value="open_whatsapp">
-            Open WhatsApp
-        </button>
-    </form>
-
-    </body>
-    </html>
-    """
+    
 @app.route("/request_file", methods=["POST"])
 def request_file():
 
