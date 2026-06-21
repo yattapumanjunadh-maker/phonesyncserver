@@ -3,6 +3,7 @@ import sqlite3
 import os
 from flask import send_from_directory
 
+requested_file = ""
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Flask(__name__)
@@ -213,6 +214,27 @@ def mobile_files_view():
     """
 
     return html
+@app.route("/request_file", methods=["POST"])
+def request_file():
+
+    global requested_file
+
+    data = request.json
+    requested_file = data.get("path", "")
+
+    return jsonify({
+        "status": "success"
+    })
+
+
+@app.route("/get_requested_file")
+def get_requested_file():
+
+    global requested_file
+
+    return jsonify({
+        "path": requested_file
+    })
 
 @app.route("/send_command", methods=["POST"])
 def send_command():
